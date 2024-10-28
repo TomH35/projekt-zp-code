@@ -14,7 +14,9 @@
     <div class="container text-center">
         <h1 class="mb-4">Dashboard</h1>
         <div class="d-flex justify-content-center gap-3">
-            <a href="game.html" class="btn btn-primary">Start Game</a>
+            <button id="start-game-btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectRobotsModal">
+                Start Game
+            </button>
             <button id="open-editor-btn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#robotNameModal">
                 Open Code Editor
             </button>
@@ -22,7 +24,27 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Robot Selection Modal -->
+    <div class="modal fade" id="selectRobotsModal" tabindex="-1" aria-labelledby="selectRobotsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectRobotsModalLabel">Select Robots for the Game</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="robot-list" class="list-group">
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-selection">Confirm Selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Robot Name Input Modal -->
     <div class="modal fade" id="robotNameModal" tabindex="-1" aria-labelledby="robotNameModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -56,7 +78,48 @@
             localStorage.removeItem('jwt');
             window.location.href = 'index.html';
         });
+
+        async function loadUserRobotNames() {
+            const jwt = localStorage.getItem('jwt');
+            try {
+                const response = await fetch('./backend/user-api/get-user-robots-names.php', {
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                });
+                const robots = await response.json();
+                const robotList = document.getElementById('robot-list');
+                robotList.innerHTML = '';
+
+                robots.forEach(robot => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    listItem.innerHTML = `
+                        <span>${robot.script_name}</span>
+                        <input type="checkbox" class="form-check-input robot-checkbox" data-name="${robot.script_name}">
+                    `;
+                    robotList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error loading robot names:', error);
+            }
+        }
+
+        document.getElementById('start-game-btn').addEventListener('click', () => {
+            loadUserRobotNames();
+        });
+
+        document.getElementById('confirm-selection').addEventListener('click', () => {
+            const selectedRobots = Array.from(document.querySelectorAll('.robot-checkbox:checked'))
+                .map(checkbox => checkbox.dataset.name);
+
+            if (selectedRobots.length > 0) {
+                sessionStorage.setItem('selectedRobots', JSON.stringify(selectedRobots));
+                window.location.href = 'game.html';
+            } else {
+                alert('Please select at least one robot.');
+            }
+        });
     </script>
 </body>
 </html>
-
