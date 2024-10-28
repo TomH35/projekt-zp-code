@@ -3,18 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="css/bootstrap.min.css"></script>
-    <script src="js-libraries/bootstrap.bundle.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js-libraries/jquery-3.7.1.min.js"></script>
+    <script src="js-libraries/bootstrap.bundle.min.js"></script>
     <title>Coding Game</title>
 </head>
-<body>
-    <h1>Coding Game</h1>
-    <a href="game.html">
-        <button>Start Game</button>
-    </a>
-    <a href="code-editor.html">
-        <button>Open Code Editor</button>
-    </a>
+<body class="bg-light d-flex flex-column align-items-center justify-content-center min-vh-100">
+
+    <div class="container text-center">
+        <h1 class="mb-4">Coding Game</h1>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="game.html" class="btn btn-primary">Start Game</a>
+            <button id="open-editor-btn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#robotNameModal">
+                Open Code Editor
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="robotNameModal" tabindex="-1" aria-labelledby="robotNameModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="robotNameModalLabel">Enter Robot Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="robot-name-input" class="form-control" placeholder="Enter your robot's name" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirm-robot-name">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('confirm-robot-name').addEventListener('click', () => {
+            const robotName = document.getElementById('robot-name-input').value.trim();
+            if (robotName) {
+                sessionStorage.setItem('robotName', robotName);
+                window.location.href = 'code-editor.html';
+            } else {
+                alert('Please enter a name for your robot.');
+            }
+        });
+    </script>
 </body>
 </html>

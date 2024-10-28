@@ -3,9 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Code Editor</title>
+    <script src="js-libraries/vs/loader.js"></script>
+    <script src="js/Robot.js"></script>
+    <style>
+        #editor-container {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    
+
+    <h1>Code Editor</h1>
+    <div id="editor-container"></div>
+    <button id="submit-code">Submit</button>
+
+    <script>
+        require.config({ paths: { 'vs': 'js-libraries/vs' } });
+        
+        window.MonacoEnvironment = {
+            getWorkerUrl: function (moduleId, label) {
+                return 'js-libraries/vs/base/worker/workerMain.js';
+            }
+        };
+
+        let robotName = sessionStorage.getItem('robotName') || 'CustomRobot';
+
+        require(['vs/editor/editor.main'], function() {
+            const editor = monaco.editor.create(document.getElementById('editor-container'), {
+                value: `class ${robotName} extends Robot {\n` +
+                       `    constructor(scene, x, y, image) {\n` +
+                       `        super(scene, x, y, image);\n` +
+                       `    }\n\n` +
+                       `    run() {\n` +
+                       `        // Write commands here to run continuously\n` +
+                       `    }\n\n` +
+                       `    onHitWall() {\n` +
+                       `        // Define behavior when the robot hits a wall\n` +
+                       `    }\n\n` +
+                       `    onDetectEnemy() {\n` +
+                       `        // Define behavior when an enemy is detected\n` +
+                       `    }\n` +
+                       `}\n`,
+                language: 'javascript',
+                theme: 'vs-dark',
+            });
+
+            fetch('js/Robot.js')
+                .then(response => response.text())
+                .then(robotClassCode => {
+                    monaco.languages.typescript.javascriptDefaults.addExtraLib(robotClassCode, 'robot.d.ts');
+                })
+                .catch(error => console.error('Error loading Robot.js:', error));
+
+            document.getElementById('submit-code').addEventListener('click', () => {
+                const code = editor.getValue();
+                fetch('submit-code-api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code, script_name: robotName })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Response:', data);
+                    alert('Code submitted.');
+                })
+                .catch(error => {
+                    console.error('Error submitting code:', error);
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
