@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player Preferences</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .preference-section {
+      margin-top: 2rem;
+    }
+    .preference-section h2 {
+      margin-bottom: 1rem;
+    }
+    .instruction {
+      font-style: italic;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .radio-label {
+      cursor: pointer;
+      position: relative;
+      padding: 0.5rem;
+    }
+    .radio-label input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .radio-label input[type="radio"]:checked + img {
+      border: 3px solid #007bff;
+      border-radius: 0.25rem;
+    }
+    .image-option {
+      transition: transform 0.2s ease, border 0.2s ease;
+      max-width: 100%;
+    }
+    .image-option:hover {
+      transform: scale(1.05);
+    }
+    .card {
+      margin-bottom: 1.5rem;
+    }
+    .save-btn {
+      margin-top: 2rem;
+    }
+  </style>
+  <script>
+    async function savePreferences() {
+      const userId = 1;
+      const arenaImage = document.querySelector('input[name="arena"]:checked').value;
+      const gunImage = document.querySelector('input[name="gun"]:checked').value;
+      const hullImage = document.querySelector('input[name="hull"]:checked').value;
+      const jwt = localStorage.getItem('jwt');
+
+      const response = await fetch('./backend/user-api/save-preferences.php', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, arena_image: arenaImage, gun_image: gunImage, hull_image: hullImage })
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    }
+  </script>
+</head>
+<body class="bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="text-center my-4">Player Preferences</h1>
+        
+        <!-- Arena Background Selection -->
+        <div class="preference-section">
+          <h2>Select Your Arena Background</h2>
+          <p class="instruction text-center">Click the image to select your arena background.</p>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card text-center">
+                <label class="radio-label p-3">
+                  <input type="radio" name="arena" value="./img/arena_bg.png" checked>
+                  <img src="img/arena_bg.png" class="card-img-top img-fluid image-option" alt="Arena Background 1">
+                  <div class="card-body">
+                    <p class="card-text">Arena Background 1</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card text-center">
+                <label class="radio-label p-3">
+                  <input type="radio" name="arena" value="./img/arena_bg2.png">
+                  <img src="img/arena_bg2.png" class="card-img-top img-fluid image-option" alt="Arena Background 2">
+                  <div class="card-body">
+                    <p class="card-text">Arena Background 2</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tank Selection -->
+        <div class="preference-section">
+          <h2>Select Your Tank</h2>
+          <p class="instruction text-center">Click the images to choose your tank's gun and hull.</p>
+          <div class="row">
+            <!-- Tank 1 -->
+            <div class="col-md-6">
+              <div class="card text-center">
+                <div class="card-header">Tank 1</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="radio-label">
+                      <input type="radio" name="gun" value="./img/Gun_01.png" checked>
+                      <img src="img/Gun_01.png" alt="Gun 1" class="img-fluid image-option" style="max-width: 100px;">
+                      <p class="mt-2">Gun 1</p>
+                    </label>
+                  </div>
+                  <div>
+                    <label class="radio-label">
+                      <input type="radio" name="hull" value="./img/Hull_01.png" checked>
+                      <img src="img/Hull_01.png" alt="Hull 1" class="img-fluid image-option" style="max-width: 100px;">
+                      <p class="mt-2">Hull 1</p>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tank 2 -->
+            <div class="col-md-6">
+              <div class="card text-center">
+                <div class="card-header">Tank 2</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="radio-label">
+                      <input type="radio" name="gun" value="./img/Gun_02.png">
+                      <img src="img/Gun_02.png" alt="Gun 2" class="img-fluid image-option" style="max-width: 100px;">
+                      <p class="mt-2">Gun 2</p>
+                    </label>
+                  </div>
+                  <div>
+                    <label class="radio-label">
+                      <input type="radio" name="hull" value="./img/Hull_02.png">
+                      <img src="img/Hull_02.png" alt="Hull 2" class="img-fluid image-option" style="max-width: 100px;">
+                      <p class="mt-2">Hull 2</p>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center save-btn">
+          <button onclick="savePreferences()" class="btn btn-primary btn-lg">
+            Save Preferences
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js-libraries/bootstrap.bundle.min.js"></script>
+</body>
+</html>

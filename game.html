@@ -1,54 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coding Game</title>
-    <script src="js-libraries/phaser.min.js"></script>
-    <script src="js-libraries/jquery-3.7.1.min.js"></script>
-    <script src="scenes/ArenaScene.js"></script>
-    <script>
-        window.onload = function() {
-            const config = {
-                type: Phaser.AUTO,
-                width: 800,
-                height: 600,
-                parent: 'game-container',
-                physics: {
-                    default: 'arcade',
-                    arcade: {
-                        gravity: { y: 0 },
-                        debug: false
-                    }
-                },
-                scene: [ArenaScene]
-            };
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coding Game</title>
+  
+  <script src="js-libraries/phaser.min.js"></script>
+  <script src="js-libraries/jquery-3.7.1.min.js"></script>
+  
+  <script src="js/Gun.js"></script>
+  <script src="js/Robot.js"></script>
+  <script src="scenes/ArenaScene.js"></script>
 
-            const game = new Phaser.Game(config);
+  <script>
+    window.onload = async function() {
+      try {
+        const selectedRobots = JSON.parse(sessionStorage.getItem('selectedRobots') || '[]');
+        const jwt = localStorage.getItem('jwt');
+    
+        const response = await fetch('./backend/user-api/get-user-robots.php', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ script_names: selectedRobots })
+        });
+        const robotsData = await response.json();
+
+        const prefsResponse = await fetch('./backend/user-api/get-user-preferences.php', {
+          headers: { 'Authorization': `Bearer ${jwt}` }
+        });
+        const userPreferences = await prefsResponse.json();
+   
+        const config = {
+          type: Phaser.AUTO,
+          width: 800,
+          height: 600,
+          parent: 'game-container',
+          physics: {
+            default: 'arcade',
+            arcade: {
+              gravity: { y: 0 },
+              debug: true
+            }
+          },
+          scene: [new ArenaScene(robotsData, userPreferences)]
         };
-    </script>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
 
-        #game-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 800px;
-            height: 600px;
-            margin: auto;
-            border: 1px solid #000;
-        }
-    </style>
+        new Phaser.Game(config);
+
+      } catch (error) {
+        console.error('Error initializing the game:', error);
+      }
+    };
+  </script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 800px;
+      height: 600px;
+      margin: auto;
+      border: 1px solid #000;
+    }
+  </style>
 </head>
 <body>
-    <div id="game-container"></div>
+  <div id="game-container"></div>
 </body>
 </html>
