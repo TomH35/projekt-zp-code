@@ -33,7 +33,7 @@ function UserSignIn() {
 
         $secretKey = 'M07gGoLVPCMAPuFvV2PLgFBFYH3lPb0Ov22jlxxcliX3PkBYXnXfFmXm76y5twn7';
         $issuedAt = time();
-        $expirationTime = $issuedAt + 3600;
+        $expirationTime = $issuedAt + 604800;//604800
         $payload = [
             'iat' => $issuedAt,
             'exp' => $expirationTime,
