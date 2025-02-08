@@ -1,0 +1,45 @@
+<?php
+require '../vendor/autoload.php';
+require_once '../Database.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+$secretKey = 'M07gGoLVPCMAPuFvV2PLgFBFYH3lPb0Ov22jlxxcliX3PkBYXnXfFmXm76y5twn7';
+
+$headers = getallheaders();
+if (!isset($headers['Authorization'])) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'No token provided']);
+    exit;
+}
+
+$token = str_replace('Bearer ', '', $headers['Authorization']);
+
+try {
+    $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
+    $user_id = $decoded->data->user_id;
+
+    $input = file_get_contents("php://input");
+    $data = json_decode($input, true);
+    if (!isset($data['script_id'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'No script id provided']);
+        exit;
+    }
+    $script_id = $data['script_id'];
+
+    $db = connect_to_database();
+    $stmt = $db->prepare("DELETE FROM user_scripts WHERE id = ? AND user_id = ?");
+    $stmt->execute([$script_id, $user_id]);
+
+    if ($stmt->rowCount() > 0) {
+        echo json_encode(['success' => true, 'message' => 'Script deleted']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Script not found or unauthorized']);
+    }
+} catch (Exception $e) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
+?>
