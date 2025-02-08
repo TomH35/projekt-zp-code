@@ -6,6 +6,7 @@
   <script src="js/auth-check.js"></script>
   <link href="css/bootstrap.min.css" rel="stylesheet" />
   <script src="js-libraries/bootstrap.bundle.min.js"></script>
+  <script src="js/token-validator.js"></script>
   <title>Dashboard</title>
   <style>
     .tile {
@@ -40,42 +41,57 @@
   <div class="container text-center">
     <h1 class="mb-4">Dashboard</h1>
     <div class="row g-4 justify-content-center">
+      <!-- Start Game Tile -->
       <div class="col-auto">
-        <div
-          class="tile"
-          id="start-game-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#selectRobotsModal"
-        >
+        <div class="tile" id="start-game-btn" data-bs-toggle="modal" data-bs-target="#selectRobotsModal">
           <img src="img/tile-game.png" alt="Start Game" />
           <div class="tile-title">Start Game</div>
         </div>
       </div>
-
+      
+      <!-- Open Editor Tile -->
       <div class="col-auto">
-        <div
-          class="tile"
-          id="open-editor-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#robotNameModal"
-        >
+        <div class="tile" id="open-editor-btn" data-bs-toggle="modal" data-bs-target="#robotNameModal">
           <img src="img/tile-code.png" alt="Open Editor" />
           <div class="tile-title">Open Editor</div>
         </div>
       </div>
-
+      
+      <!-- Player Preferences Tile -->
       <div class="col-auto">
         <div class="tile" id="player-preferences-btn">
           <img src="img/tile-settings.png" alt="Player Preferences" />
           <div class="tile-title">Player Preferences</div>
         </div>
       </div>
-
+      
+      <!-- Script Manager Tile -->
       <div class="col-auto">
-        <div
-          class="tile bg-danger text-white"
-          id="sign-out-btn"
-        >
+        <div class="tile" id="script-manager-btn">
+          <img src="img/tile-scripts.png" alt="Script Manager" />
+          <div class="tile-title">Script Manager</div>
+        </div>
+      </div>
+      
+      <!-- Battle Stats Tile -->
+      <div class="col-auto">
+        <div class="tile" id="battle-stats-btn">
+          <img src="img/tile-battles.png" alt="Battle Stats" />
+          <div class="tile-title">Battle Stats</div>
+        </div>
+      </div>
+      
+      <!-- Robot Marketplace Tile -->
+      <div class="col-auto">
+        <div class="tile" id="robot-marketplace-btn">
+          <img src="img/tile-marketplace.png" alt="Robot Marketplace" />
+          <div class="tile-title">Robot Marketplace</div>
+        </div>
+      </div>
+      
+      <!-- Sign Out Tile -->
+      <div class="col-auto">
+        <div class="tile bg-danger text-white" id="sign-out-btn">
           <img src="img/tile-logout.png" alt="Sign Out" />
           <div class="tile-title">Sign Out</div>
         </div>
@@ -83,103 +99,54 @@
     </div>
   </div>
 
-  <div
-    class="modal fade"
-    id="selectRobotsModal"
-    tabindex="-1"
-    aria-labelledby="selectRobotsModalLabel"
-    aria-hidden="true"
-  >
+  <!-- Robot Selection Modal -->
+  <div class="modal fade" id="selectRobotsModal" tabindex="-1" aria-labelledby="selectRobotsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="selectRobotsModalLabel">
-            Select Robots for the Game
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <h5 class="modal-title" id="selectRobotsModalLabel">Select Robots for the Game</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <ul id="robot-list" class="list-group"></ul>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cancel
-          </button>
-          <button type="button" class="btn btn-primary" id="confirm-selection">
-            Confirm Selection
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="confirm-selection">Confirm Selection</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div
-    class="modal fade"
-    id="robotNameModal"
-    tabindex="-1"
-    aria-labelledby="robotNameModalLabel"
-    aria-hidden="true"
-  >
+  <!-- Robot Name Input Modal -->
+  <div class="modal fade" id="robotNameModal" tabindex="-1" aria-labelledby="robotNameModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="robotNameModalLabel">
-            Enter Robot Name
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <h5 class="modal-title" id="robotNameModalLabel">Enter Robot Name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <input
-            type="text"
-            id="robot-name-input"
-            class="form-control"
-            placeholder="Enter your robot's name"
-          />
+          <input type="text" id="robot-name-input" class="form-control" placeholder="Enter your robot's name" />
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-          <button type="button" class="btn btn-primary" id="confirm-robot-name">
-            Confirm
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="confirm-robot-name">Confirm</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    document
-      .getElementById("confirm-robot-name")
-      .addEventListener("click", () => {
-        const robotName = document
-          .getElementById("robot-name-input")
-          .value.trim();
-        if (robotName) {
-          sessionStorage.setItem("robotName", robotName);
-          window.location.href = "code-editor.html";
-        } else {
-          alert("Please enter a name for your robot.");
-        }
-      });
+    document.getElementById("confirm-robot-name").addEventListener("click", () => {
+      const robotName = document.getElementById("robot-name-input").value.trim();
+      if (robotName) {
+        sessionStorage.setItem("robotName", robotName);
+        window.location.href = "code-editor.html";
+      } else {
+        alert("Please enter a name for your robot.");
+      }
+    });
 
     document.getElementById("sign-out-btn").addEventListener("click", () => {
       localStorage.removeItem("jwt");
@@ -190,22 +157,30 @@
       window.location.href = "user-preferences.html";
     });
 
+    document.getElementById("script-manager-btn").addEventListener("click", () => {
+      window.location.href = "script-manager.html";
+    });
+
+    document.getElementById("battle-stats-btn").addEventListener("click", () => {
+      window.location.href = "battle-stats.html";
+    });
+
+    document.getElementById("robot-marketplace-btn").addEventListener("click", () => {
+      window.location.href = "robot-marketplace.html";
+    });
+
     async function loadUserRobotNames() {
       const jwt = localStorage.getItem("jwt");
       try {
         const response = await fetch("./backend/user-api/get-user-robots-names.php", {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
+          headers: { Authorization: `Bearer ${jwt}` },
         });
         const robots = await response.json();
         const robotList = document.getElementById("robot-list");
         robotList.innerHTML = "";
-
         robots.forEach((robot) => {
           const listItem = document.createElement("li");
-          listItem.className =
-            "list-group-item d-flex justify-content-between align-items-center";
+          listItem.className = "list-group-item d-flex justify-content-between align-items-center";
           listItem.innerHTML = `
             <span>${robot.script_name}</span>
             <input type="checkbox" class="form-check-input robot-checkbox" data-name="${robot.script_name}">
@@ -221,20 +196,16 @@
       loadUserRobotNames();
     });
 
-    document
-      .getElementById("confirm-selection")
-      .addEventListener("click", () => {
-        const selectedRobots = Array.from(
-          document.querySelectorAll(".robot-checkbox:checked")
-        ).map((checkbox) => checkbox.dataset.name);
-
-        if (selectedRobots.length > 0) {
-          sessionStorage.setItem("selectedRobots", JSON.stringify(selectedRobots));
-          window.location.href = "game.html";
-        } else {
-          alert("Please select at least one robot.");
-        }
-      });
+    document.getElementById("confirm-selection").addEventListener("click", () => {
+      const selectedRobots = Array.from(document.querySelectorAll(".robot-checkbox:checked"))
+        .map((checkbox) => checkbox.dataset.name);
+      if (selectedRobots.length > 0) {
+        sessionStorage.setItem("selectedRobots", JSON.stringify(selectedRobots));
+        window.location.href = "game.html";
+      } else {
+        alert("Please select at least one robot.");
+      }
+    });
   </script>
 </body>
 </html>
