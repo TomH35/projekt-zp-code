@@ -5,10 +5,8 @@ class ArenaScene extends Phaser.Scene {
         this.userPreferences = userPreferences; 
 
         this.robotInstances = [];
-
         this.robotGroup = null;
         this.bulletGroup = null;
-
         this.gameOver = false;
     }
 
@@ -29,7 +27,6 @@ class ArenaScene extends Phaser.Scene {
     }
 
     create() {
-
         const bg = this.add.image(0, 0, 'background-image');
         bg.setOrigin(0, 0);
         bg.setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
@@ -68,13 +65,22 @@ class ArenaScene extends Phaser.Scene {
                 robotInstance.bodySprite.setCollideWorldBounds(true);
 
                 const style = { font: '14px Arial', fill: '#ffffff' };
+
                 const energyText = this.add.text(
                     robotInstance.bodySprite.x,
                     robotInstance.bodySprite.y - 40,
                     `Energy: ${robotInstance.energy}`,
                     style
-                );
+                ).setOrigin(0.5, 1);
                 robotInstance.energyText = energyText;
+
+                const nameText = this.add.text(
+                    robotInstance.bodySprite.x,
+                    robotInstance.bodySprite.y + 20,
+                    robotInstance.robotName,
+                    style
+                ).setOrigin(0.5, -0.5);
+                robotInstance.nameText = nameText;
             }
         });
 
@@ -112,7 +118,6 @@ class ArenaScene extends Phaser.Scene {
                 this.add.existing(gunInstance.gunSprite);
 
                 robotInstance.runInterpreter = this.createRobotInterpreter(robotInstance);
-
                 robotInstance.robotName = robotData.script_name || "Unnamed Robot";
 
                 return robotInstance;
@@ -174,7 +179,6 @@ class ArenaScene extends Phaser.Scene {
             explosion.destroy();
         });
 
-        
         robot.energy -= bulletData.damage;
         console.log(`Robot energy after damage: ${robot.energy}`);
 
@@ -182,12 +186,10 @@ class ArenaScene extends Phaser.Scene {
             this.destroyRobot(robot);
         }
 
-
         if (bulletData.shooter) {
             bulletData.shooter.energy += bulletData.energyReturnOnHit;
             console.log(`Shooter gained ${bulletData.energyReturnOnHit}, new energy=${bulletData.shooter.energy}`);
         }
-
 
         bulletSprite.destroy();
     }
@@ -235,6 +237,9 @@ class ArenaScene extends Phaser.Scene {
         if (robot.energyText) {
             robot.energyText.destroy();
         }
+        if (robot.nameText) {
+            robot.nameText.destroy();
+        }
         if (robot.bodySprite) {
             robot.bodySprite.destroy();
         }
@@ -246,6 +251,27 @@ class ArenaScene extends Phaser.Scene {
     }
 
     showWinnerModal(winningRobot) {
+       
+        const jwt = localStorage.getItem('jwt');
+        fetch('./backend/user-api/insert-battle-result-api.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwt
+            },
+            body: JSON.stringify({
+                winner_robot: winningRobot.robotName || 'Unknown',
+                robot_energy: winningRobot.energy
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Battle result inserted:", data);
+        })
+        .catch(error => {
+            console.error("Error inserting battle result:", error);
+        });
+        
         const modal = document.createElement('div');
         modal.style.position = 'fixed';
         modal.style.top = '0';
@@ -295,9 +321,14 @@ class ArenaScene extends Phaser.Scene {
             }
 
             if (robotInstance.energyText && robotInstance.bodySprite) {
-                robotInstance.energyText.x = robotInstance.bodySprite.x - 20;
+                robotInstance.energyText.x = robotInstance.bodySprite.x;
                 robotInstance.energyText.y = robotInstance.bodySprite.y - 40;
                 robotInstance.energyText.setText(`Energy: ${robotInstance.energy.toFixed(1)}`);
+            }
+
+            if (robotInstance.nameText && robotInstance.bodySprite) {
+                robotInstance.nameText.x = robotInstance.bodySprite.x;
+                robotInstance.nameText.y = robotInstance.bodySprite.y + 20;
             }
         });
 
