@@ -8,98 +8,129 @@
   <script src="js-libraries/bootstrap.bundle.min.js"></script>
   <script src="js/token-validator.js"></script>
   <title>Dashboard</title>
+
   <style>
-    .tile {
-      width: 160px;
-      height: 160px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #7b6046;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+
+    .banner {
+      width: 100vw;
+      background: rgb(117,95,81);
+      background: linear-gradient(90deg, rgba(117,95,81,0) 0%, rgba(30,30,30,1) 40%, rgba(30,30,30,1) 60%, rgba(117,95,81,0) 100%);
+      text-align: center;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    .banner h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #f9f9f9;
+      margin: 0;
+    }
+
+    .tiles-container {
+      flex: 1; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row.g-4 {
+      /*max-width: 900px;*/
+    }
+    .tile {
+      width: 180px;
+      height: 80px;
+      background-color: #1f1f1f;
+      border-radius: 8px;
+      display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
     }
     .tile:hover {
       transform: scale(1.03);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
-    .tile img {
-      max-width: 50px;
-      margin-bottom: 8px;
-    }
-    .tile-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #333;
+
+    .tile-gold {
+      background-color: #ffd700;
+      color: #000;
     }
   </style>
 </head>
-<body class="bg-light d-flex flex-column align-items-center justify-content-center min-vh-100">
-  <div class="container text-center">
-    <h1 class="mb-4">Dashboard</h1>
-    <div class="row g-4 justify-content-center">
-      <!-- Start Game Tile -->
-      <div class="col-auto">
-        <div class="tile" id="start-game-btn" data-bs-toggle="modal" data-bs-target="#selectRobotsModal">
-          <img src="img/tile-game.png" alt="Start Game" />
-          <div class="tile-title">Start Game</div>
+<body class="bg-brown">
+
+  <div class="banner">
+    <h1>Dashboard</h1>
+  </div>
+
+  <div class="tiles-container">
+    <div class="container-fluid text-center">
+
+      <div class="row g-4 justify-content-center mb-4">
+        <div class="col-auto">
+          <div class="tile" id="battle-stats-btn">
+            Battle Stats
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="tile" id="open-editor-btn" data-bs-toggle="modal" data-bs-target="#robotNameModal">
+            Open Editor
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="tile tile-gold" id="start-game-btn" data-bs-toggle="modal" data-bs-target="#selectRobotsModal">
+            Start Game
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <div class="tile" id="script-manager-btn">
+            Script Manager
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <div class="tile" id="robot-marketplace-btn">
+            Robot Marketplace
+          </div>
         </div>
       </div>
-      
-      <!-- Open Editor Tile -->
-      <div class="col-auto">
-        <div class="tile" id="open-editor-btn" data-bs-toggle="modal" data-bs-target="#robotNameModal">
-          <img src="img/tile-code.png" alt="Open Editor" />
-          <div class="tile-title">Open Editor</div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-auto">
+          <div class="tile" id="documentation-btn">
+            Documentation
+          </div>
         </div>
-      </div>
-      
-      <!-- Player Preferences Tile -->
-      <div class="col-auto">
-        <div class="tile" id="player-preferences-btn">
-          <img src="img/tile-settings.png" alt="Player Preferences" />
-          <div class="tile-title">Player Preferences</div>
+
+        <div class="col-auto">
+          <div class="tile" id="player-preferences-btn">
+            Preferences
+          </div>
         </div>
-      </div>
-      
-      <!-- Script Manager Tile -->
-      <div class="col-auto">
-        <div class="tile" id="script-manager-btn">
-          <img src="img/tile-scripts.png" alt="Script Manager" />
-          <div class="tile-title">Script Manager</div>
-        </div>
-      </div>
-      
-      <!-- Battle Stats Tile -->
-      <div class="col-auto">
-        <div class="tile" id="battle-stats-btn">
-          <img src="img/tile-battles.png" alt="Battle Stats" />
-          <div class="tile-title">Battle Stats</div>
-        </div>
-      </div>
-      
-      <!-- Robot Marketplace Tile -->
-      <div class="col-auto">
-        <div class="tile" id="robot-marketplace-btn">
-          <img src="img/tile-marketplace.png" alt="Robot Marketplace" />
-          <div class="tile-title">Robot Marketplace</div>
-        </div>
-      </div>
-      
-      <!-- Sign Out Tile -->
-      <div class="col-auto">
-        <div class="tile bg-danger text-white" id="sign-out-btn">
-          <img src="img/tile-logout.png" alt="Sign Out" />
-          <div class="tile-title">Sign Out</div>
+
+        <div class="col-auto">
+          <div class="tile" id="sign-out-btn">
+            Sign Out
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Robot Selection Modal -->
   <div class="modal fade" id="selectRobotsModal" tabindex="-1" aria-labelledby="selectRobotsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -118,7 +149,6 @@
     </div>
   </div>
 
-  <!-- Robot Name Input Modal -->
   <div class="modal fade" id="robotNameModal" tabindex="-1" aria-labelledby="robotNameModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -167,6 +197,10 @@
 
     document.getElementById("robot-marketplace-btn").addEventListener("click", () => {
       window.location.href = "robot-marketplace.html";
+    });
+
+    document.getElementById("documentation-btn")?.addEventListener("click", () => {
+      window.location.href = "documentation.html";
     });
 
     async function loadUserRobotNames() {

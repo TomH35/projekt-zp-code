@@ -1,81 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #7b6046;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .register-box {
+      background-color: #1f1f1f; 
+      width: 320px; 
+      padding: 2rem;
+      border-radius: 0.5rem;
+      color: #fff; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      text-align: left; 
+    }
+
+    .register-box h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .register-box label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .register-box input[type="text"],
+    .register-box input[type="email"],
+    .register-box input[type="password"] {
+      width: 100%;
+      background-color: #1f1f1f;
+      border: 1px solid #b7935f;
+      border-radius: 0.25rem;
+      padding: 0.6rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .btn-register {
+      background-color: #ffd700;
+      color: #000;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-register:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .response-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      display: none;
+      font-weight: bold;
+      text-align: center;
+    }
+    .alert-success {
+      background-color: #4caf50;
+      color: #fff;
+    }
+    .alert-danger {
+      background-color: #f44336;
+      color: #fff;
+    }
+  </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center min-vh-100">
+<body>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h3 class="card-title text-center mb-4">Register</h3>
-                        <form id="registrationForm">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Register</button>
-                            </div>
-                        </form>
-                        <div id="responseMessage" class="alert mt-3 d-none"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="register-box">
+    <h1>Register</h1>
+    <form id="registrationForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
 
-    <script src="js-libraries/jquery-3.7.1.min.js"></script>
-    <script src="js-libraries/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
 
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
 
-            fetch('./backend/auth-api/registration-api.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, email, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const responseMessage = document.getElementById('responseMessage');
-                responseMessage.classList.remove('d-none', 'alert-success', 'alert-danger');
-                
-                if (data.message === 'User registered successfully') {
-                    responseMessage.classList.add('alert-success');
-                    responseMessage.textContent = data.message;
-                } else {
-                    responseMessage.classList.add('alert-danger');
-                    responseMessage.textContent = data.message;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                const responseMessage = document.getElementById('responseMessage');
-                responseMessage.classList.remove('d-none', 'alert-success');
-                responseMessage.classList.add('alert-danger');
-                responseMessage.textContent = 'An error occurred during registration.';
-            });
-        });
-    </script>
+      <button type="submit" class="btn-register">Register</button>
+    </form>
+    <div id="responseMessage" class="response-message"></div>
+  </div>
+
+  <script src="js-libraries/jquery-3.7.1.min.js"></script>
+  <script src="js-libraries/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      fetch('./backend/auth-api/registration-api.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const responseMsgEl = document.getElementById('responseMessage');
+        responseMsgEl.style.display = 'block'; 
+        responseMsgEl.classList.remove('alert-success','alert-danger');
+
+        if (data.message === 'User registered successfully') {
+          responseMsgEl.classList.add('alert-success');
+          responseMsgEl.textContent = data.message;
+          setTimeout(() => {
+            window.location.href = 'sign-in.html';
+          }, 2000);
+        } else {
+          responseMsgEl.classList.add('alert-danger');
+          responseMsgEl.textContent = data.message;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        const responseMsgEl = document.getElementById('responseMessage');
+        responseMsgEl.style.display = 'block';
+        responseMsgEl.classList.remove('alert-success');
+        responseMsgEl.classList.add('alert-danger');
+        responseMsgEl.textContent = 'An error occurred during registration.';
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,20 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <script src="js-libraries/jquery-3.7.1.min.js"></script>
-    <script src="js-libraries/bootstrap.bundle.min.js"></script>
-    <title>Coding Game</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BotArena JS</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #7b6046; 
+      height: 100vh; 
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main {
+      flex-grow: 1; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .banner {
+      width: 100vw; 
+      background: rgb(117,95,81);
+      background: linear-gradient(90deg, rgba(117,95,81,0) 0%, rgba(30,30,30,1) 40%, rgba(30,30,30,1) 60%, rgba(117,95,81,0) 100%);
+      text-align: center;
+      color: #fff;
+      font-size: 3rem;
+      font-weight: bold;
+      padding: 1rem 0;
+    }
+
+    .banner .highlight {
+      color: #ffd700;
+    }
+
+    .btn-custom {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      background-color: #3e3e3e;
+      padding: 0.75rem 1.5rem;
+      margin: 1rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 500;
+    }
+    .btn-custom:hover {
+      background-color: #2b2b2b;
+    }
+  </style>
 </head>
-<body class="bg-light d-flex flex-column align-items-center justify-content-center min-vh-100">
-    <div class="container text-center">
-        <h1 class="mb-4">Coding Game</h1>
-        <div class="d-flex justify-content-center gap-3">
-            <a href="user-registration.html" class="btn btn-primary">Register</a>
-            <a href="sign-in.html" class="btn btn-secondary">Sign In</a>
-        </div>
+<body>
+
+  <div class="main">
+    <div class="banner">
+      BotArena <span class="highlight">JS</span>
     </div>
+    <div>
+      <a href="user-registration.html" class="btn-custom">Register</a>
+      <a href="sign-in.html" class="btn-custom">Sign In</a>
+    </div>
+  </div>
+  <script src="js-libraries/jquery-3.7.1.min.js"></script>
+  <script src="js-libraries/bootstrap.bundle.min.js"></script>
 </body>
 </html>
