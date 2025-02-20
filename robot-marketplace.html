@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Robot Marketplace</title>
-
   <link href="css/bootstrap.min.css" rel="stylesheet">
-
   <script src="js/auth-check.js"></script>
   <script src="js/token-validator.js"></script>
-
+  <script src="js-libraries/bootstrap.bundle.min.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -19,10 +17,8 @@
       font-family: Arial, sans-serif;
       background-color: #7b6046;
     }
-
     .banner {
       width: 100%;
-      background: rgb(117,95,81);
       background: linear-gradient(90deg, rgba(117,95,81,0) 0%, rgba(30,30,30,1) 40%, rgba(30,30,30,1) 60%, rgba(117,95,81,0) 100%);
       text-align: center;
       padding: 2rem 0;
@@ -34,19 +30,17 @@
       margin: 0;
       font-weight: bold;
     }
-
     .marketplace-container {
       width: 90%;
       max-width: 900px;
       margin: 0 auto 3rem;
       text-align: center;
     }
-
-    .search-bar {
+    .search-bar, .sort-bar {
       margin: 0 auto 2rem; 
       max-width: 500px;
     }
-    .search-bar input {
+    .search-bar input, .sort-bar select {
       background-color: #1f1f1f;
       color: #fff;
       border: none;
@@ -59,7 +53,6 @@
     .search-bar input::placeholder {
       color: #ccc;
     }
-
     .scrollable-table {
       max-height: 60vh;
       overflow-y: auto;
@@ -67,7 +60,6 @@
       background-color: #7b6046;
       padding: 10px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -90,7 +82,7 @@
       background-color: #7b6046; 
       color: #fff;
     }
-    .view-btn, .save-btn {
+    .view-btn, .save-btn, .rate-btn {
       background-color: #1f1f1f;
       color: #fff;
       border: none;
@@ -99,12 +91,12 @@
       cursor: pointer;
       font-size: 0.9rem;
       transition: transform 0.2s, box-shadow 0.2s;
+      margin-right: 5px;
     }
-    .view-btn:hover, .save-btn:hover {
+    .view-btn:hover, .save-btn:hover, .rate-btn:hover {
       transform: scale(1.03);
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-
     .back-btn {
       background-color: #1f1f1f;
       color: #fff;
@@ -120,7 +112,6 @@
       transform: scale(1.03);
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-
     .modal-header, .modal-footer {
       background-color: #1f1f1f;
       color: #fff;
@@ -136,36 +127,43 @@
   </style>
 </head>
 <body>
-  
   <div class="banner">
     <h1>Robot Marketplace</h1>
   </div>
   
   <div class="marketplace-container">
-    
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search by script or username...">
     </div>
-    
+    <!-- Sort dropdown -->
+    <div class="sort-bar">
+      <select id="sortSelect" class="form-select">
+        <option value="created_newest">Newest to Oldest</option>
+        <option value="created_oldest">Oldest to Newest</option>
+        <option value="rating">Highest Rating</option>
+      </select>
+    </div>
     <div class="scrollable-table">
       <table id="marketplaceTable">
         <thead>
           <tr>
             <th>Script Name</th>
             <th>Author</th>
+            <th>Avg Rating</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
+          <!-- Public scripts will be inserted here -->
         </tbody>
       </table>
     </div>
-    
     <div class="mt-4">
       <button class="back-btn" onclick="window.location.href='dashboard.html'">Back</button>
     </div>
   </div>
 
+  <!-- View Script Modal -->
   <div class="modal fade" id="viewScriptModal" tabindex="-1" aria-labelledby="viewScriptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -180,10 +178,35 @@
     </div>
   </div>
 
-  <script src="js-libraries/bootstrap.bundle.min.js"></script>
+  <!-- Rate Script Modal -->
+  <div class="modal fade" id="rateScriptModal" tabindex="-1" aria-labelledby="rateScriptModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rateScriptModalLabel">Rate Script</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Rate this script (1 to 5):</p>
+          <select id="ratingSelect" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="submitRatingBtn" class="btn btn-primary">Submit Rating</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    let allScripts = [];
+    let allScripts = []; // Array to store fetched public scripts
+    let currentRatingScriptId = null; // To store which script is being rated
 
     document.addEventListener("DOMContentLoaded", function() {
       const jwt = localStorage.getItem("jwt");
@@ -196,11 +219,22 @@
       document.getElementById("searchInput").addEventListener("input", function() {
         filterScripts(this.value);
       });
+
+      document.getElementById("sortSelect").addEventListener("change", function() {
+        fetchPublicScripts(); // Re-fetch scripts with new sort order
+      });
+
+      // Submit rating event
+      document.getElementById("submitRatingBtn").addEventListener("click", function() {
+        const rating = document.getElementById("ratingSelect").value;
+        submitRating(currentRatingScriptId, rating);
+      });
     });
 
     function fetchPublicScripts() {
       const jwt = localStorage.getItem("jwt");
-      fetch('./backend/user-api/get-public-scripts-api.php', {
+      const sortValue = document.getElementById("sortSelect").value;
+      fetch('./backend/user-api/get-public-scripts-api.php?sort=' + sortValue, {
         headers: { 'Authorization': 'Bearer ' + jwt }
       })
       .then(response => response.json())
@@ -220,12 +254,16 @@
       tbody.innerHTML = "";
       scripts.forEach(script => {
         const tr = document.createElement("tr");
+        // If there is no rating, default to "N/A"
+        const avgRating = script.avg_rating ? parseFloat(script.avg_rating).toFixed(1) : "N/A";
         tr.innerHTML = `
           <td>${script.script_name}</td>
           <td>${script.username}</td>
+          <td>${avgRating}</td>
           <td>
             <button class="view-btn" data-script-id="${script.id}">View Script</button>
             <button class="save-btn" data-script-id="${script.id}">Save Robot</button>
+            <button class="rate-btn" data-script-id="${script.id}">Rate</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -240,6 +278,15 @@
         btn.addEventListener("click", function() {
           const scriptId = this.getAttribute("data-script-id");
           saveRobot(scriptId);
+        });
+      });
+      document.querySelectorAll(".rate-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const scriptId = this.getAttribute("data-script-id");
+          currentRatingScriptId = scriptId;
+          // Open the rating modal
+          const modal = new bootstrap.Modal(document.getElementById("rateScriptModal"));
+          modal.show();
         });
       });
     }
@@ -282,6 +329,33 @@
         }
       })
       .catch(error => console.error("Error saving script:", error));
+    }
+
+    function submitRating(scriptId, rating) {
+      const jwt = localStorage.getItem("jwt");
+      fetch('./backend/user-api/submit-script-rating-api.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwt
+        },
+        body: JSON.stringify({ script_id: scriptId, rating: parseInt(rating) })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Rating submitted successfully.");
+          // Refresh the public scripts to update average ratings.
+          fetchPublicScripts();
+          // Hide the rating modal.
+          const modalEl = document.getElementById("rateScriptModal");
+          const modal = bootstrap.Modal.getInstance(modalEl);
+          modal.hide();
+        } else {
+          alert("Error submitting rating: " + data.message);
+        }
+      })
+      .catch(error => console.error("Error submitting rating:", error));
     }
   </script>
 </body>
