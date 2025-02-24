@@ -135,7 +135,6 @@
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search by script or username...">
     </div>
-    <!-- Sort dropdown -->
     <div class="sort-bar">
       <select id="sortSelect" class="form-select">
         <option value="created_newest">Newest to Oldest</option>
@@ -154,7 +153,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Public scripts will be inserted here -->
         </tbody>
       </table>
     </div>
@@ -163,7 +161,6 @@
     </div>
   </div>
 
-  <!-- View Script Modal -->
   <div class="modal fade" id="viewScriptModal" tabindex="-1" aria-labelledby="viewScriptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -178,7 +175,6 @@
     </div>
   </div>
 
-  <!-- Rate Script Modal -->
   <div class="modal fade" id="rateScriptModal" tabindex="-1" aria-labelledby="rateScriptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -205,8 +201,8 @@
   </div>
 
   <script>
-    let allScripts = []; // Array to store fetched public scripts
-    let currentRatingScriptId = null; // To store which script is being rated
+    let allScripts = [];
+    let currentRatingScriptId = null;
 
     document.addEventListener("DOMContentLoaded", function() {
       const jwt = localStorage.getItem("jwt");
@@ -221,10 +217,9 @@
       });
 
       document.getElementById("sortSelect").addEventListener("change", function() {
-        fetchPublicScripts(); // Re-fetch scripts with new sort order
+        fetchPublicScripts();
       });
 
-      // Submit rating event
       document.getElementById("submitRatingBtn").addEventListener("click", function() {
         const rating = document.getElementById("ratingSelect").value;
         submitRating(currentRatingScriptId, rating);
@@ -254,7 +249,6 @@
       tbody.innerHTML = "";
       scripts.forEach(script => {
         const tr = document.createElement("tr");
-        // If there is no rating, default to "N/A"
         const avgRating = script.avg_rating ? parseFloat(script.avg_rating).toFixed(1) : "N/A";
         tr.innerHTML = `
           <td>${script.script_name}</td>
@@ -284,7 +278,6 @@
         btn.addEventListener("click", function() {
           const scriptId = this.getAttribute("data-script-id");
           currentRatingScriptId = scriptId;
-          // Open the rating modal
           const modal = new bootstrap.Modal(document.getElementById("rateScriptModal"));
           modal.show();
         });
@@ -345,9 +338,7 @@
       .then(data => {
         if (data.success) {
           alert("Rating submitted successfully.");
-          // Refresh the public scripts to update average ratings.
           fetchPublicScripts();
-          // Hide the rating modal.
           const modalEl = document.getElementById("rateScriptModal");
           const modal = bootstrap.Modal.getInstance(modalEl);
           modal.hide();

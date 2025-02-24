@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BotArena JS</title>
-
   <link href="css/bootstrap.min.css" rel="stylesheet" />
 
   <style>
@@ -13,46 +12,72 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: Arial, sans-serif;
-      background-color: #7b6046; 
-      height: 100vh; 
+      background-color: #7b6046;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .main {
-      flex-grow: 1; 
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
     }
 
     .banner {
-      width: 100vw; 
-      background: rgb(117,95,81);
-      background: linear-gradient(90deg, rgba(117,95,81,0) 0%, rgba(30,30,30,1) 40%, rgba(30,30,30,1) 60%, rgba(117,95,81,0) 100%);
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: 8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(
+        90deg,
+        rgba(117,95,81,0) 0%,
+        rgba(30,30,30,1) 40%,
+        rgba(30,30,30,1) 60%,
+        rgba(117,95,81,0) 100%
+      );
       text-align: center;
-      color: #fff;
-      font-size: 3rem;
-      font-weight: bold;
-      padding: 1rem 0;
     }
-
-    .banner .highlight {
+    .banner-text {
+      font-size: 4rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .highlight {
       color: #ffd700;
     }
-
+    .banner img {
+      position: absolute;
+      max-height: 8rem; 
+    }
+    .brown-tank {
+      left: 20vw;
+      top: 40vh;
+    }
+    .green-tank {
+      right: 18vw;
+      top: -10vh;
+    }
+    .btn-container {
+      text-align: center;
+    }
     .btn-custom {
       display: inline-block;
       text-decoration: none;
       color: #fff;
       background-color: #3e3e3e;
       padding: 0.75rem 1.5rem;
-      margin: 1rem 0.5rem;
+      margin: 0.5rem;
       border-radius: 0.25rem;
       font-weight: 500;
     }
@@ -65,9 +90,11 @@
 
   <div class="main">
     <div class="banner">
-      BotArena <span class="highlight">JS</span>
+      <img src="img/tank1.png" alt="Brown Tank" class="brown-tank" />
+      <div class="banner-text">BotArena <span class="highlight">JS</span></div>
+      <img src="img/tank2.png" alt="Green Tank" class="green-tank" />
     </div>
-    <div>
+    <div class="btn-container">
       <a href="user-registration.html" class="btn-custom">Register</a>
       <a href="sign-in.html" class="btn-custom">Sign In</a>
     </div>
