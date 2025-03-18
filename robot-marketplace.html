@@ -230,7 +230,7 @@
       const jwt = localStorage.getItem("jwt");
       const sortValue = document.getElementById("sortSelect").value;
       fetch('./backend/user-api/get-public-scripts-api.php?sort=' + sortValue, {
-        headers: { 'Authorization': 'Bearer ' + jwt }
+        headers: { 'auth': 'Bearer ' + jwt }
       })
       .then(response => response.json())
       .then(data => {
@@ -309,7 +309,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ script_id: scriptId })
       })
@@ -330,7 +330,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ script_id: scriptId, rating: parseInt(rating) })
       })

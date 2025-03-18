@@ -5,16 +5,16 @@ require_once '../Database.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-$secretKey = 'M07gGoLVPCMAPuFvV2PLgFBFYH3lPb0Ov22jlxxcliX3PkBYXnXfFmXm76y5twn7';
+$secretKey = 'YFIKmQ8HQEIbNcKA0jbbscN5c0z3WrwhXV7cqkh7Kro4GVxeIIebNztbphaNKh4r';
 
 $headers = getallheaders();
-if (!isset($headers['Authorization'])) {
+if (!isset($headers['auth'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'No token provided']);
     exit;
 }
 
-$token = str_replace('Bearer ', '', $headers['Authorization']);
+$token = str_replace('Bearer ', '', $headers['auth']);
 
 try {
     $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));

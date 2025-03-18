@@ -33,7 +33,8 @@ class Database {
 }
 
 function connect_to_database() {
-    $database = new Database('127.0.0.1', 3307, 'root', '', 'codedb');
+    $database = new Database('mariadb105.r6.websupport.sk', 3315, 'codedb_user', '74iuHrH8izU2fahf+FuO', 'codedb');
+    //$connection = new PDO("mysql:host=mariadb105.r6.websupport.sk;port=3315;dbname=codedb", "codedb_user", "tu_vlozte_heslo");
     $connection = $database->connect();
     
     return $connection;

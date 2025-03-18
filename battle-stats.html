@@ -130,7 +130,7 @@
       }
 
       fetch("./backend/user-api/get-user-battles-api.php", {
-        headers: { "Authorization": "Bearer " + jwt }
+        headers: { "auth": "Bearer " + jwt }
       })
       .then(response => response.json())
       .then(data => {

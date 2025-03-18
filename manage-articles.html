@@ -363,7 +363,7 @@
     function fetchCategories() {
       const jwt = localStorage.getItem("jwt");
       fetch('./backend/category-api/get-categories-api.php', {
-        headers: { 'Authorization': 'Bearer ' + jwt }
+        headers: { 'auth': 'Bearer ' + jwt }
       })
       .then(res => res.json())
       .then(data => {
@@ -390,7 +390,7 @@
     function fetchArticles() {
       const jwt = localStorage.getItem("jwt");
       fetch('./backend/article-api/get-articles-api.php', {
-        headers: { 'Authorization': 'Bearer ' + jwt }
+        headers: { 'auth': 'Bearer ' + jwt }
       })
       .then(res => res.json())
       .then(data => {
@@ -463,7 +463,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ title, slug, category_id: categoryId, content })
       })
@@ -486,7 +486,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ article_id: id, title, slug, category_id: categoryId, content })
       })
@@ -510,7 +510,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ article_id: id })
       })

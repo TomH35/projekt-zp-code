@@ -301,7 +301,7 @@
     function fetchCategories() {
       const jwt = localStorage.getItem("jwt");
       fetch('./backend/category-api/get-categories-api.php', {
-        headers: { 'Authorization': 'Bearer ' + jwt }
+        headers: { 'auth': 'Bearer ' + jwt }
       })
       .then(response => response.json())
       .then(data => {
@@ -364,7 +364,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ category_name: name })
       })
@@ -387,7 +387,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ category_id: id, category_name: name })
       })
@@ -412,7 +412,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwt
+          'auth': 'Bearer ' + jwt
         },
         body: JSON.stringify({ category_id: id })
       })

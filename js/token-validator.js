@@ -7,7 +7,7 @@
       
       fetch('./backend/auth-api/token-validation-api.php', {
         headers: {
-          'Authorization': 'Bearer ' + token
+          'auth': 'Bearer ' + token
         }
       })
       .then(function(response) {

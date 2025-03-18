@@ -257,7 +257,7 @@ class ArenaScene extends Phaser.Scene {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwt
+                'auth': 'Bearer ' + jwt
             },
             body: JSON.stringify({
                 winner_robot: winningRobot.robotName || 'Unknown',

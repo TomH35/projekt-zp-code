@@ -181,7 +181,7 @@
         const response = await fetch('./backend/user-api/save-preferences.php', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${jwt}`,
+            'auth': `Bearer ${jwt}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ 

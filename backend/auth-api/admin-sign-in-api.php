@@ -5,7 +5,7 @@ require_once '../Database.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-$secretKey = 'M07gGoLVPCMAPuFvV2PLgFBFYH3lPb0Ov22jlxxcliX3PkBYXnXfFmXm76y5twn7';
+$secretKey = 'YFIKmQ8HQEIbNcKA0jbbscN5c0z3WrwhXV7cqkh7Kro4GVxeIIebNztbphaNKh4r';
 
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);

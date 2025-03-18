@@ -22,7 +22,7 @@
         const response = await fetch('./backend/user-api/get-user-robots.php', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${jwt}`,
+            'auth': `Bearer ${jwt}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ script_names: selectedRobots })
@@ -30,7 +30,7 @@
         const robotsData = await response.json();
 
         const prefsResponse = await fetch('./backend/user-api/get-user-preferences.php', {
-          headers: { 'Authorization': `Bearer ${jwt}` }
+          headers: { 'auth': `Bearer ${jwt}` }
         });
         const userPreferences = await prefsResponse.json();
    

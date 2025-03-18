@@ -206,7 +206,7 @@
     function loadScripts() {
       const jwt = localStorage.getItem('jwt');
       fetch('./backend/script-api/get-user-scripts-api.php', {
-        headers: { Authorization: 'Bearer ' + jwt }
+        headers: { auth: 'Bearer ' + jwt }
       })
       .then(response => response.json())
       .then(data => {
@@ -277,7 +277,7 @@
       fetch('./backend/script-api/delete-user-script-api.php', {
         method: 'POST',
         headers: {
-          Authorization: 'Bearer ' + jwt,
+          auth: 'Bearer ' + jwt,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ script_id: scriptId })
@@ -302,7 +302,7 @@
       fetch('./backend/script-api/update-script-public-status-api.php', {
         method: 'POST',
         headers: {
-          Authorization: 'Bearer ' + jwt,
+          auth: 'Bearer ' + jwt,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ script_id: scriptId, script_is_public: isPublic })

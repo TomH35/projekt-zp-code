@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Code Editor</title>
   <script src="js/auth-check.js"></script>
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -49,6 +49,34 @@
 
     let robotName = sessionStorage.getItem('robotName') || 'CustomRobot';
 
+    function validateUserCode(code) {
+      const disallowedPatterns = [
+        /eval\s*\(/i,                              
+        /import\s*\(.*http.*\)/i,                   
+        /document\.body/i,                         
+        /document\.cookie/i,                        
+        /document\.write\s*\(/i,                   
+        /localStorage\.getItem\s*\(/i,              
+        /sessionStorage\.getItem\s*\(/i,           
+        /fetch\s*\(.*attacker-website\.com/i,       
+        /script\.src/i,                             
+        /navigator\.serviceWorker\.register/i,      
+        /window\.location\.href/i,                 
+        /while\s*\(\s*true\s*\)/i,                 
+      ];
+
+      for (const pattern of disallowedPatterns) {
+        if (pattern.test(code)) {
+          return {
+            isValid: false,
+            message: `Code contains a disallowed pattern: "${pattern}".`
+          };
+        }
+      }
+
+      return { isValid: true, message: 'Safe to submit' };
+    }
+
     require(['vs/editor/editor.main'], function() {
       const editor = monaco.editor.create(document.getElementById('editor-container'), {
         value: `class ${robotName} extends Robot {\n` +
@@ -80,9 +108,16 @@
         const code = editor.getValue();
         const userId = localStorage.getItem('user_id');
 
+        const validation = validateUserCode(code);
+        if (!validation.isValid) {
+          alert(`Malicious or disallowed code detected:\n${validation.message}\n\nPlease remove the offending code and try again.`);
+          return;
+        }
+
         fetch('./backend/user-api/submit-code-api.php', {
           method: 'POST',
           headers: {
+            'auth': 'Bearer ' + localStorage.getItem('jwt'),
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ code, script_name: robotName, user_id: userId })

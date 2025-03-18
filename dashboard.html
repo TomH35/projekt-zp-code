@@ -209,7 +209,7 @@
       const jwt = localStorage.getItem("jwt");
       try {
         const response = await fetch("./backend/user-api/get-user-robots-names.php", {
-          headers: { Authorization: `Bearer ${jwt}` },
+          headers: { auth: `Bearer ${jwt}` },
         });
         const robots = await response.json();
         const robotList = document.getElementById("robot-list");

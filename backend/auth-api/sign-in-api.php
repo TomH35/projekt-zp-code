@@ -31,7 +31,7 @@ function UserSignIn() {
             return;
         }
 
-        $secretKey = 'M07gGoLVPCMAPuFvV2PLgFBFYH3lPb0Ov22jlxxcliX3PkBYXnXfFmXm76y5twn7';
+        $secretKey = 'YFIKmQ8HQEIbNcKA0jbbscN5c0z3WrwhXV7cqkh7Kro4GVxeIIebNztbphaNKh4r';
         $issuedAt = time();
         $expirationTime = $issuedAt + 604800;//604800
         $payload = [
